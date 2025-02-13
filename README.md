@@ -77,11 +77,14 @@ GET /api/votes - Get all votes
 
 9. Implement real-time election monitoring.
 
-
 Ref Img
+
 ![image](https://github.com/user-attachments/assets/1d999a36-58f8-4cf1-af68-5cdc3dc95f52)
+
 ![image](https://github.com/user-attachments/assets/a6e8e8e9-bbb5-41c6-9426-86316a64c67d)
+
 ![image](https://github.com/user-attachments/assets/c530c60f-800f-43db-aea5-2426be0c73ec)
+
 ![image](https://github.com/user-attachments/assets/6807fdb6-882f-4bb2-9c32-d96f778ced70)
 
 
