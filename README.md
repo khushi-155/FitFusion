@@ -1,81 +1,168 @@
-Overview
+# FitFusion
 
-The E-Voting System is designed to facilitate online elections efficiently. Users can create elections, cast votes, and monitor election results in a secure and organized manner. This application is built using Spring Boot, Hibernate, and MySQL, ensuring smooth and efficient data management.
+FitFusion is a fitness application that enables trainers to assign workouts and diets to customers through an online platform. Customers can log in, access their exercise routines, and follow them securely using JWT authentication.
 
-1. Features
+## Features
+- User authentication with JWT
+- Role-based access control (Admin, Trainer, Customer)
+- Assigning and managing workouts and diets
+- Secure API endpoints
 
-Create, update, delete, and view elections.
-Add and manage election choices.
-Cast and count votes securely.
-Monitor election results in real-time.
-User authentication for secure voting.
+## Project Structure
+### 1. Models
+The following entity classes are created in the `model` package with the required annotations (Lombok, JPA):
 
-2. Tech Stack
+#### User
+- `Long id`
+- `String email`
+- `String password`
+- `int age`
+- `String gender`
+- `Long contactNo`
+- `Set<Role> roles` (ManyToMany)
+- `List<Exercise> exerciseList` (OneToMany)
+- `List<Diet> diets` (OneToMany)
 
-Backend: Spring Boot, Hibernate
-Database: MySQL
-Tools: Maven, Postman (for API testing)
+#### Role
+- `Long id`
+- `String roleName`
 
-3. Installation & Setup
-Prerequisites
-Java 17+
-MySQL Database
-Maven
-IDE - Eclipse
+#### Exercise
+- `Long id`
+- `String name`
+- `String description`
+- `int sets`
+- `int reps`
+- `User user` (ManyToOne)
 
-4. Steps to Setup
+#### Diet
+- `Long id`
+- `String name`
+- `String description`
+- `User user` (ManyToOne)
 
-Clone the Repository
+### 2. DTO Classes
+The following DTO classes are created in the `dto` package:
 
-git clone https://github.com/your-repository/e-voting-system.git
-cd e-voting-system
+- `DietDto`
+  - `String name`
+  - `String description`
 
-Configure MySQL Database
-Create a new database in MySQL:
-CREATE DATABASE evoting_system;
-Update application.properties file with your MySQL credentials:
-spring.datasource.url=jdbc:mysql://localhost:3306/evoting_system
-spring.datasource.username=root
-spring.datasource.password=yourpassword
-spring.jpa.hibernate.ddl-auto=update
+- `ExerciseDto`
+  - `String name`
+  - `String description`
+  - `int sets`
+  - `int reps`
 
-5.Build and Run the Application
+- `UserDto`
+  - `String email`
+  - `String password`
+  - `int age`
+  - `String gender`
+  - `Long contactNo`
+  - `String userType` ("ADMIN", "CUSTOMER", "TRAINER")
 
-mvn clean install
-mvn spring-boot:run
+- `JwtRequest`
+  - `String username`
+  - `String password`
 
-6. Access the Application
+- `JwtResponse`
+  - `String jwtToken`
 
-API endpoints will be available at http://localhost:8080
+### 3. Controllers
+API endpoints are created in the `controller` package:
 
-If a frontend is integrated, access the UI accordingly.
+#### AuthController
+- **POST `/auth/login`** - User login
 
-API Endpoints
+#### DietController (Trainer APIs)
+- **GET `/diet/all`** - Fetch all diets
+- **GET `/diet/{id}`** - Fetch diet by ID
+- **POST `/diet/create/{userId}`** - Create diet for a user
+- **PUT `/diet/{id}`** - Update diet by ID
+- **DELETE `/diet/{id}`** - Delete diet by ID
 
-a. Election APIs
+#### ExerciseController (Trainer APIs)
+- **GET `/exercise/all`** - Fetch all exercises
+- **GET `/exercise/{id}`** - Fetch exercise by ID
+- **POST `/exercise/create/{userId}`** - Create exercise for a user
+- **PUT `/exercise/{id}`** - Update exercise by ID
+- **DELETE `/exercise/{id}`** - Delete exercise by ID
 
-POST /api/elections - Create an election
-GET /api/elections - Get all elections
-PUT /api/elections/{id} - Update an election
-DELETE /api/elections/{id} - Delete an election
+#### UserController
+- **Admin APIs**
+  - **GET `/user/all`** - Fetch all users
+  - **GET `/user/{id}`** - Fetch user by ID
+  - **PUT `/user/{id}`** - Update user by ID
+  - **DELETE `/user/{id}`** - Delete user by ID
 
-b. Choice APIs
+- **Customer APIs**
+  - **GET `/user/exercise/{id}`** - Fetch user exercises
+  - **GET `/user/diet/{id}`** - Fetch user diets
 
-POST /api/choices - Add election choices
-GET /api/choices - Get all choices
-PUT /api/choices/{id} - Update election choices
-DELETE /api/choices/{id} - Delete election choices
+- **Public APIs**
+  - **POST `/user/register`** - User registration
 
-c.Vote APIs
+### 4. Services
+Implement business logic in the `service` package:
+- `DietService`
+- `ExerciseService`
+- `UserService`
 
-POST /api/votes - Cast a vote
-GET /api/votes - Get all votes
+### 5. Repositories
+Extend JPA Repository in the `repository` package:
+- `DietRepository`
+- `ExerciseRepository`
+- `UserRepository`
 
-7. Future Enhancements
+### 6. Exception Handling
+Create custom exceptions in the `exception` package:
+- `DietNotFoundException`
+- `ExerciseNotFoundException`
+- `UserNotFoundException`
 
-8. Add authentication and user roles.
+### 7. JWT Security
+Create classes in the `jwt` package:
+- `JwtAuthenticationHelper`
+- `JwtAuthenticationFilter`
 
-9. Implement real-time election monitoring.
+### 8. Security Configuration
+Create `FitFusionSecurityConfig`:
+- Configure `PasswordEncoder`, `AuthenticationManager`, and `SecurityFilterChain`
+- Open endpoints: `/auth/login`, `/user/register`
+
+## Setup Instructions
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd FitFusion
+   ```
+3. Build the project:
+   ```bash
+   mvn clean install
+   ```
+4. Run the application:
+   ```bash
+   mvn spring-boot:run
+   ```
+5. Test the APIs using Postman.
+
+## Technologies Used
+- Java
+- Spring Boot
+- Spring Security
+- JWT Authentication
+- Hibernate & JPA
+- Lombok
+- Maven
+
+## License
+This project is licensed under the MIT License.
+
+
 
 Ref Img
 
